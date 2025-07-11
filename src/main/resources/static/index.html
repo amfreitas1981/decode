@@ -1,0 +1,27 @@
+<style>
+    body { font-family: sans-serif; padding: 20px; }
+    input, button { margin: 10px 0; padding: 5px; }
+    #resposta { margin-top: 20px; font-weight: bold; color: #007BFF; }
+</style>
+<h1>🔐 Codebreaker</h1>
+<p>Insira uma sequência (ex: <code>31,36,41,46</code> ou <code>A,C,E</code>)</p>
+<input type="text" id="sequencia" size="40" placeholder="Digite aqui">
+<button onclick="resolver()">🔍 Resolver</button>
+<div id="resposta"></div>
+<script>
+    function resolver() {
+        const dados = document.getElementById("sequencia").value.split(",").map(s => s.trim());
+        fetch("/api/resolver", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ dados })
+        })
+        .then(resp => resp.json())
+        .then(res => {
+            document.getElementById("resposta").innerText = "🔮 Próximos valores: " + res.join(", ");
+        })
+        .catch(err => {
+            document.getElementById("resposta").innerText = "❌ Erro ao tentar resolver a sequência.";
+        });
+    }
+</script>
